@@ -106,7 +106,7 @@ console.log(healthRiskData);
   console.log(`${healthcareLabel}: ${yMin} to ${yMax}`);
 
   // 7c use xMin and xMax values to set the xScale domain
-  xScale.domain([Math.round(xMin-2), Math.round(xMax+2)]);
+  xScale.domain([Math.round(xMin-1), Math.round(xMax+1)]);
 
   // 7c use yMin and yMax values to set the yScale domain
   yScale.domain([Math.round(yMin-2), Math.round(yMax+2)]);

@@ -1,10 +1,10 @@
 // 1 assign labels for the data to variables
-var povertyLabel = "pct of pop. living in poverty";
-var ageLabel = "avg. age";
-var incomeLabel = "avg income";
-var healthcareLabel = "pct of pop. lacking healthcare coverage";
-var obesityLabel = "pct of pop. who are obese";
-var smokesLabel = "pct of pop. who smoke";
+var povertyLabel = "Pct of pop. living in poverty";
+var ageLabel = "Avg. age";
+var incomeLabel = "Avg income";
+var healthcareLabel = "Pct of pop. lacking healthcare coverage";
+var obesityLabel = "Pct of pop. who are obese";
+var smokesLabel = "Pct of pop. who smoke";
 
 
 // 2  set up chart dimensions and chart

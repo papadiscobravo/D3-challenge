@@ -194,44 +194,44 @@ chartGroup.append("text")
 // (slope, intercept, rvalue, pvalue, stderr) = linregress(xValues, yValues)
 // to plot y = m * x + b (where m is slope and b is intercept)
 // I wonder what does the same thing in JavaScript or perhaps specifically in D3?
-var x = poverty; 
-var y = healthcare;
+// var x = poverty; 
+// var y = healthcare;
 
-function linearRegression(y, x) {
-  var lr = {};
-  var n = y.length;
-  var sum_x = 0;
-  var sum_y = 0;
-  var sum_xy = 0;
-  var sum_xx = 0;
-  var sum_yy = 0;
+// function linearRegression(y, x) {
+//   var lr = {};
+//   var n = y.length;
+//   var sum_x = 0;
+//   var sum_y = 0;
+//   var sum_xy = 0;
+//   var sum_xx = 0;
+//   var sum_yy = 0;
 
-  for (var i = 0; i < y.length; i++) {
+//   for (var i = 0; i < y.length; i++) {
 
-      sum_x += x[i];
-      sum_y += y[i];
-      sum_xy += (x[i]*y[i]);
-      sum_xx += (x[i]*x[i]);
-      sum_yy += (y[i]*y[i]);
-  } 
+//       sum_x += x[i];
+//       sum_y += y[i];
+//       sum_xy += (x[i]*y[i]);
+//       sum_xx += (x[i]*x[i]);
+//       sum_yy += (y[i]*y[i]);
+//   } 
 
-  lr["slope"] = (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x * sum_x);
-  lr["intercept"] = (sum_y - lr.slope * sum_x) / n;
-  lr["r2"] = Math.pow((n * sum_xy - sum_x * sum_y)/Math.sqrt((n * sum_xx - sum_x * sum_x) * (n * sum_yy - sum_y * sum_y)),2);
-  return lr;
+//   lr["slope"] = (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x * sum_x);
+//   lr["intercept"] = (sum_y - lr.slope * sum_x) / n;
+//   lr["r2"] = Math.pow((n * sum_xy - sum_x * sum_y)/Math.sqrt((n * sum_xx - sum_x * sum_x) * (n * sum_yy - sum_y * sum_y)),2);
+//   return lr;
 
-};
+// };
 
-var regressLine = svg.append("svg:line")
-.attr("x1", x(0))
-.attr("y1", y(lr.intercept))
-.attr("x2", x(xMax))
-.attr("y2", y( (xMax * lr.slope) + lr.intercept ))
-.style("stroke", "red");
+// var regressLine = svg.append("svg:line")
+// .attr("x1", x(0))
+// .attr("y1", y(lr.intercept))
+// .attr("x2", x(xMax))
+// .attr("y2", y( (xMax * lr.slope) + lr.intercept ))
+// .style("stroke", "red");
 
-console.log(`slope (m): ${lr.slope}`);
-console.log(`intercept (b): ${lr.intercept}`);
-console.log(`coefficient of determination (r^2): ${lr.r2}`);
+// console.log(`slope (m): ${lr.slope}`);
+// console.log(`intercept (b): ${lr.intercept}`);
+// console.log(`coefficient of determination (r^2): ${lr.r2}`);
 
 
 }).catch(function(error) {

@@ -1,43 +1,189 @@
-console.log("app.js loaded");
+// 1 assign labels for the data to variables
+var povertyLabel = "pct of pop. living in poverty";
+var ageLabel = "avg. age";
+var incomeLabel = "avg income";
+var healthcareLabel = "pct of pop. lacking healthcare coverage";
+var obesityLabel = "pct of pop. who are obese";
+var smokesLabel = "pct of pop. who smoke";
 
 
-// initialize variables that let me easily change labels of columns of data and axes of graphs
-var stateLabel = "state";
-var abbrLabel = "abbreviation";
-var povertyLabel = "Percent of population who live in poverty";
-var ageLabel = "Median age of population";
-var incomeLabel = "Median income of population";
-var healthcareLabel = "Percent of population who lack heathcare coverage";
-var obesityLabel = "Percent of population who are obese";
-var smokingLabel = "Percent of population who smoke";
+// 2  set up chart dimensions and chart
 
-//import data
-// data = import data.csv
-d3.csv("assets/data/data.csv").then(function(assignData) {
+  // give it a width
+  var svgWidth = 1000;
 
-    console.log("data.csv loaded");
-    console.log(assignData);
-  
-    // log a list of names
-    var names = assignData.map(data => data.name);
-    console.log("names", names);
-  
-    // Cast each numerical value in assignData as a number
-    assignData.forEach(function(data) {
-      data.poverty = +data.poverty;
-      data.age = +data.age;
-      data.income = +data.income;
-      data.healthcare = +data.healthcare;
-      data.obesity = +data.obesity;
-      data.smoking = +data.smokes;
-      console.log("-_-_-_-_-_-_-_-_-_-_-_-");
-      console.log(`${stateLabel}: ${data.state} (${data.abbr})`);
-      console.log(`${ageLabel}: ${data.age}`);
-      console.log(`${incomeLabel}: ${data.income}`);
-      console.log(`${healthcareLabel}: ${data.healthcare}`);
-      console.log(`${obesityLabel}: ${data.obesity}`);
-      console.log(`${smokingLabel}: ${data.smokes}`);
-    });
-  }).catch(function(error) {
-    console.log(error);
+   // give it a height
+  var svgHeight = 500;
+
+  // calculate aspect ratio
+  aspectRatio = svgWidth / svgHeight;
+
+  // set vertical margin as a proportion of height (here 5%)
+  vMargin = svgWidth / 10;
+
+  // calculate horizontal margin in proportion to aspect ratio
+  hMargin = vMargin * aspectRatio;
+
+  console.log(`SVG dimensions of ${svgWidth}:${svgHeight} pxs is an aspect ratio of ${Math.round((aspectRatio * 100)) / 100}:1.`);
+
+  // calculate chart width and height
+  var width = svgWidth - (hMargin * 2);
+  var height = svgHeight - (vMargin * 2);
+
+  console.log(`Chart dimensions of ${width}:${height} pxs is an aspect ratio of ${Math.round((width / height * 100)) / 100}:1.`);
+
+
+// 3 create SVG wrapper
+var svg = d3
+  .select("body")
+  .append("svg")
+  .attr("width", svgWidth)
+  .attr("height", svgHeight);
+
+var chartGroup = svg.append("g")
+  .attr("transform", `translate(${hMargin}, ${vMargin})`);
+
+// 4 import data
+d3.csv("assets/data/data.csv").then(function(healthRiskData) {
+  // the data table has these headers:
+    // id
+    // state
+    // abbr        *******
+    // poverty     *******
+    // povertyMoe
+    // age             ***
+    // ageMoe
+    // income          ***
+    // incomeMoe
+    // healthcare  *******
+    // healthcareLow
+    // healthcareHigh
+    // obesity         ***
+    // obesityLow
+    // obesityHigh
+    // smokes          ***
+    // smokesLow
+    // smokesHigh
+
+
+// 5 parse data: format and convert to ints
+  healthRiskData.forEach(function(data) {
+    data.poverty = +data.poverty;
+    data.age = +data.age;
+    data.income = +data.income;
+    data.healthcare = +data.healthcare;
+    data.obesity = +data.obesity;
+    data.smokes = +data.smokes;
   });
+
+console.log("here's the data:");
+console.log(healthRiskData);
+
+// 6 create chart scales
+  var xScale = d3.scaleLinear()
+     .domain(d3.extent(healthRiskData, d => d.poverty))
+     .range([0, width]);
+
+  // console.log("Here's xScale...");
+  // console.log(xScale);
+
+  var yScale = d3.scaleLinear()
+    .domain(d3.extent(healthRiskData, d => d.healthcare))
+    .range([height, 0]);
+
+  //  console.log("...and here's yScale:");
+  //  console.log(yScale);
+  
+  
+  // 7a find min and max values for poverty
+  var xMin = d3.min(healthRiskData, d => d.poverty);
+  var xMax = d3.max(healthRiskData, d => d.poverty);
+  console.log(`${povertyLabel}: ${xMin} to ${xMax}`);
+
+  // 7b find max value for healthcare 
+  var yMin = d3.min(healthRiskData, d => d.healthcare);
+  var yMax = d3.max(healthRiskData, d => d.healthcare);
+  console.log(`${healthcareLabel}: ${yMin} to ${yMax}`);
+
+  // 7c use xMin and xMax values to set the xScale domain
+  xScale.domain([Math.round(xMin-2), Math.round(xMax+2)]);
+
+  // 7c use yMin and yMax values to set the yScale domain
+  yScale.domain([Math.round(yMin-2), Math.round(yMax+2)]);
+
+
+// 8 create each axis
+  var bottomAxis = d3.axisBottom(xScale);
+  var leftAxis = d3.axisLeft(yScale);
+
+//  console.log("Here's the x axis...");
+//  console.log(bottomAxis);
+
+//  console.log("...and here's the y axis:");
+//  console.log(leftAxis);
+
+
+// 9 append axes to chartGroup
+     // a add x-axis
+  chartGroup.append("g")
+    .attr("transform", `translate(0, ${height})`)
+    .call(bottomAxis);
+
+     // b add y-axis
+  chartGroup.append("g").call(leftAxis);
+
+
+// 10 add titles to each axis
+chartGroup.append("text")
+.attr("transform", `translate(${width / 6.25 * -1}, ${height / 2})`)
+.attr("text-anchor", "center")
+.attr("transform", "translate(-50 280) rotate(-90)")
+.attr("font-size", "16px")
+.text(healthcareLabel);
+
+chartGroup.append("text")
+.attr("transform", `translate(${width / 2}, ${height + vMargin - 50})`)
+.attr("text-anchor", "middle")
+.attr("font-size", "16px")
+.text(povertyLabel);
+
+
+// 11 set up generator and append SVG path
+
+// 1st try
+// All this commented-out business makes a very funny shape
+// but at least lets me know my code is plotting something:
+  // line generator for data
+  var line = d3.line()
+    .x(d => xScale(d.poverty))
+    .y(d => yScale(d.healthcare));
+
+// console.log("Here are the contents of the variable called points:");
+// console.log(points);
+
+      
+      // append circles
+      var circlesGroup = chartGroup.selectAll(null)
+        .data(healthRiskData)
+        .enter()
+        .append("circle")
+        .attr("cx", d => xScale(d.poverty))
+        .attr("cy", d => yScale(d.healthcare))
+        .attr("r", width / 45)
+        .attr("fill", "lightblue")
+        .attr("stroke-width", .5)
+        .attr("stroke", "steelblue")
+
+        var circlesGroup = chartGroup.selectAll(null)
+        .data(healthRiskData)
+        .enter()
+        .append("text")
+        .attr("dx", d => xScale(d.poverty)-7)
+        .attr("dy", d => yScale(d.healthcare)+4)
+        .attr("font-size", "12px")
+        .attr("font-color", "black")
+        .text(function(d){return d.abbr});
+
+}).catch(function(error) {
+  console.log(error);
+});

@@ -184,6 +184,12 @@ chartGroup.append("text")
         .attr("font-color", "black")
         .text(function(d){return d.abbr});
 
+// If I wanted to draw a trend line in Python, I would do something like this: 
+//        (slope, intercept, rvalue, pvalue, stderr) = linregress(xValues, yValues)
+// I wonder what does the same thing in JavaScript?
+
+
+
 }).catch(function(error) {
   console.log(error);
 });

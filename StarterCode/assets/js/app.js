@@ -220,10 +220,15 @@ function linearRegression(y, x) {
   lr["r2"] = Math.pow((n * sum_xy - sum_x * sum_y)/Math.sqrt((n * sum_xx - sum_x * sum_x) * (n * sum_yy - sum_y * sum_y)),2);
 
   return lr;
+
+
+
 };
 
-console.log("linear regression:");
-console.log(lr);
+console.log(`slope: ${lr.slope}`);
+console.log(`intercept: ${lr.intercept}`);
+console.log(`r2: ${lr.r2}`);
+
 
 }).catch(function(error) {
   console.log(error);

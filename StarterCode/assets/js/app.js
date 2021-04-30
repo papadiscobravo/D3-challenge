@@ -65,6 +65,8 @@ d3.csv("assets/data/data.csv").then(function(healthRiskData) {
     // smokesLow
     // smokesHigh
 
+var poverty = [];
+var healthcare = [];
 
 // 5 parse data: format and convert to ints
   healthRiskData.forEach(function(data) {
@@ -74,6 +76,10 @@ d3.csv("assets/data/data.csv").then(function(healthRiskData) {
     data.healthcare = +data.healthcare;
     data.obesity = +data.obesity;
     data.smokes = +data.smokes;
+    // and make one array of poverty...
+    poverty.push(data.poverty);
+    // ...and another of healthcare for linear regression (below):
+    healthcare.push(data.healthcare);    
   });
 
 console.log("here's the data:");
@@ -185,10 +191,39 @@ chartGroup.append("text")
         .text(function(d){return d.abbr});
 
 // If I wanted to draw a trend line in Python, I would do something like this: 
-//        (slope, intercept, rvalue, pvalue, stderr) = linregress(xValues, yValues)
-// I wonder what does the same thing in JavaScript?
+// (slope, intercept, rvalue, pvalue, stderr) = linregress(xValues, yValues)
+// to plot y = m * x + b (where m is slope and b is intercept)
+// I wonder what does the same thing in JavaScript or perhaps specifically in D3?
+var x = poverty; 
+var y = healthcare;
 
+function linearRegression(y, x) {
+  var lr = {};
+  var n = y.length;
+  var sum_x = 0;
+  var sum_y = 0;
+  var sum_xy = 0;
+  var sum_xx = 0;
+  var sum_yy = 0;
 
+  for (var i = 0; i < y.length; i++) {
+
+      sum_x += x[i];
+      sum_y += y[i];
+      sum_xy += (x[i]*y[i]);
+      sum_xx += (x[i]*x[i]);
+      sum_yy += (y[i]*y[i]);
+  } 
+
+  lr["slope"] = (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x * sum_x);
+  lr["intercept"] = (sum_y - lr.slope * sum_x) / n;
+  lr["r2"] = Math.pow((n * sum_xy - sum_x * sum_y)/Math.sqrt((n * sum_xx - sum_x * sum_x) * (n * sum_yy - sum_y * sum_y)),2);
+
+  return lr;
+};
+
+console.log("linear regression:");
+console.log(lr);
 
 }).catch(function(error) {
   console.log(error);

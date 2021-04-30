@@ -10,10 +10,10 @@ var smokesLabel = "Pct of pop. who smoke";
 // 2  set up chart dimensions and chart
 
   // give it a width
-  var svgWidth = 1000;
+  var svgWidth = 900;
 
    // give it a height
-  var svgHeight = 500;
+  var svgHeight = 700;
 
   // calculate aspect ratio
   aspectRatio = svgWidth / svgHeight;
@@ -143,7 +143,7 @@ console.log(healthRiskData);
 chartGroup.append("text")
 .attr("transform", `translate(${width / 6.25 * -1}, ${height / 2})`)
 .attr("text-anchor", "center")
-.attr("transform", "translate(-50 280) rotate(-90)")
+.attr("transform", "translate(-50 400) rotate(-90)")
 .attr("font-size", "16px")
 .text(healthcareLabel);
 

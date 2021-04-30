@@ -218,16 +218,20 @@ function linearRegression(y, x) {
   lr["slope"] = (n * sum_xy - sum_x * sum_y) / (n * sum_xx - sum_x * sum_x);
   lr["intercept"] = (sum_y - lr.slope * sum_x) / n;
   lr["r2"] = Math.pow((n * sum_xy - sum_x * sum_y)/Math.sqrt((n * sum_xx - sum_x * sum_x) * (n * sum_yy - sum_y * sum_y)),2);
-
   return lr;
-
-
 
 };
 
-console.log(`slope: ${lr.slope}`);
-console.log(`intercept: ${lr.intercept}`);
-console.log(`r2: ${lr.r2}`);
+var regressLine = svg.append("svg:line")
+.attr("x1", x(0))
+.attr("y1", y(lr.intercept))
+.attr("x2", x(xMax))
+.attr("y2", y( (xMax * lr.slope) + lr.intercept ))
+.style("stroke", "red");
+
+console.log(`slope (m): ${lr.slope}`);
+console.log(`intercept (b): ${lr.intercept}`);
+console.log(`coefficient of determination (r^2): ${lr.r2}`);
 
 
 }).catch(function(error) {
